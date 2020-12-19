@@ -2,7 +2,6 @@ package HttpBodyClose
 
 import (
 	"fmt"
-	"github.com/gostaticanalysis/analysisutil"
 	"go/ast"
 	"go/types"
 	"golang.org/x/tools/go/analysis"
@@ -22,8 +21,8 @@ var Analyzer = &analysis.Analyzer{
 const (
 	Doc = "bodyclose checks whether HTTP response body was closed"
 
-	nethttpPath = "io"
-	closeMethod = "Close"
+	ioPath = "io"
+	closerInterface = "Closer"
 )
 
 type runner struct {
@@ -46,12 +45,24 @@ func (r *runner) isCloserFunc(c *types.Func) bool {
 	return c.Pkg() == r.closeMthd.Pkg() && c.Name() == r.closeMthd.Name()
 }
 
+func (r *runner) getClosingType(pkgs []*ssa.Package) types.Type {
+	for _, pkg := range pkgs {
+		if pkg.Pkg.Name() == ioPath {
+			for memName, mem := range pkg.Members {
+				if memName == closerInterface {
+					return mem.Type()
+				}
+			}
+		}
+	}
+	return nil
+}
+
 func (r *runner) run(pass *analysis.Pass) (interface{}, error) {
 	r.pass = pass
 	ssaAnalysis := pass.ResultOf[buildssa.Analyzer].(*buildssa.SSA)
 	funcs := ssaAnalysis.SrcFuncs
-
-	t := analysisutil.TypeOf(pass, nethttpPath, "Closer")
+	t := r.getClosingType(ssaAnalysis.Pkg.Prog.AllPackages())
 	if t == nil {
 		// skip checking
 		return nil, nil

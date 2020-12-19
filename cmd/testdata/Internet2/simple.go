@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	_ "io"
 	"net/http"
 	"time"
 )
@@ -42,7 +41,7 @@ func isAppReady() bool {
 }
 
 func closeResponse(resp *http.Response) {
-	if err := resp.Body.Close(); err != nil {
+	if err := resp.Body; err != nil {
 		fmt.Println("[Consumer] can not close the response")
 	}
 }

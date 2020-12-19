@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "io"
 	"net/http"
 )
 
