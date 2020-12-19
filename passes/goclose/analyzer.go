@@ -117,7 +117,7 @@ func (r *runner) isCloserExists(is *[]ssa.Instruction) bool {
 				}
 			}
 		case *ssa.MakeClosure:
-			// We assume that if the closing function is passed as an argument to a function, then it'll be used inside
+			// We assume that if the closing function is passed as an argument to a function, then it'll be called inside
 			return r.isClosureCalled(v.Referrers())
 		case *ssa.ChangeInterface:
 			return r.isCloserExists(v.Referrers())
