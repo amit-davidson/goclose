@@ -2,7 +2,6 @@ package statJanitor
 
 import (
 	"fmt"
-	"go/ast"
 	"go/types"
 	"golang.org/x/tools/go/analysis"
 	"golang.org/x/tools/go/analysis/passes/buildssa"
@@ -11,16 +10,16 @@ import (
 
 var Analyzer = &analysis.Analyzer{
 	Name: "statJanitor",
-	Doc:  Doc,
-	Run:  run,
+	Doc:  doc,
+	Run:  new(runner).run,
 	Requires: []*analysis.Analyzer{
 		buildssa.Analyzer,
 	},
 }
 
 const (
-	Doc = "statJanitor finds objects that didn't call Close()"
-
+	doc = "statJanitor finds objects that didn't call Close()"
+	errorMessage = "must be closed"
 	ioPath = "io"
 	closerInterface = "Closer"
 )
@@ -29,12 +28,6 @@ type runner struct {
 	pass      *analysis.Pass
 	closeTyp  *types.Interface
 	closeMthd *types.Func
-	skipFile  map[*ast.File]bool
-}
-
-func run(pass *analysis.Pass) (interface{}, error) {
-	runner := runner{}
-	return runner.run(pass)
 }
 
 func (r *runner) isCloserType(t types.Type) bool {
@@ -82,7 +75,7 @@ func (r *runner) run(pass *analysis.Pass) (interface{}, error) {
 				t := v.Type()
 				if r.isCloserType(t) {
 					if !r.isCloserExists(v.Referrers()) {
-						pass.Reportf(v.Pos(), "response body must be closed")
+						pass.Reportf(v.Pos(), errorMessage)
 					}
 				}
 			}

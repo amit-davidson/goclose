@@ -9,11 +9,7 @@ func get() *http.Response {
 	return resp
 }
 func closeBody(resp *http.Response) error {
-	err := resp.Body.Close()
-	if err != nil {
-		return err
-	}
-	return nil
+	return resp.Body.Close()
 }
 
 func main() {

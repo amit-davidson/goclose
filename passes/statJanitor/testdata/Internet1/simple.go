@@ -42,7 +42,7 @@ func isAppReady() bool {
 }
 
 func closeResponse(responseBody io.Closer) {
-	if err := responseBody; err != nil {
+	if err := responseBody.Close(); err != nil {
 		fmt.Println("[Consumer] can not close the response")
 	}
 }

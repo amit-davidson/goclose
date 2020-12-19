@@ -10,11 +10,7 @@ func get() *http.Response {
 	return resp
 }
 func closeBody(body io.ReadCloser) error {
-	err := body.Close()
-	if err != nil {
-		return err
-	}
-	return nil
+	return body.Close()
 }
 
 func main() {

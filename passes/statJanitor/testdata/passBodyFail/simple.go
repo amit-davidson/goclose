@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"net/http"
 )
 
@@ -8,12 +9,13 @@ func get() *http.Response {
 	resp, _ := http.Get("https://example.com")
 	return resp
 }
-func closeBody(close func() error) error {
-	return close()
+func closeBody(body io.ReadCloser) error {
+	_ = body
+	return nil
 }
 
 func main() {
 	resp := get()
-	closeFunc := resp.Body.Close
-	_ = closeBody(closeFunc)
+	body := resp.Body // want `must be closed`
+	_ = closeBody(body)
 }

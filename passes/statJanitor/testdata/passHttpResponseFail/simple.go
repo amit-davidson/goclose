@@ -8,12 +8,12 @@ func get() *http.Response {
 	resp, _ := http.Get("https://example.com")
 	return resp
 }
-func closeBody(close func() error) error {
-	return close()
+func closeBody(resp *http.Response) error {
+	_ = resp.Body // want `must be closed`
+	return nil
 }
 
 func main() {
 	resp := get()
-	closeFunc := resp.Body.Close
-	_ = closeBody(closeFunc)
+	_ = closeBody(resp)
 }
