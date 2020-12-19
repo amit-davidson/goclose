@@ -1,4 +1,4 @@
-package statJanitor
+package goclose
 
 import (
 	"fmt"

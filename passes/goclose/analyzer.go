@@ -1,4 +1,4 @@
-package statJanitor
+package goclose
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 )
 
 var Analyzer = &analysis.Analyzer{
-	Name: "statJanitor",
+	Name: "goclose",
 	Doc:  doc,
 	Run:  new(runner).run,
 	Requires: []*analysis.Analyzer{
@@ -18,7 +18,7 @@ var Analyzer = &analysis.Analyzer{
 }
 
 const (
-	doc = "statJanitor finds objects that didn't call Close()"
+	doc = "goclose finds objects that didn't call Close()"
 	errorMessage = "must be closed"
 	ioPath = "io"
 	closerInterface = "Closer"
