@@ -18,7 +18,7 @@ var Analyzer = &analysis.Analyzer{
 }
 
 const (
-	doc = "goclose finds places with missing call to Close() where it should've been called"
+	doc = "goclose finds places with a missing call to Close()"
 	errorMessage = "must be closed"
 	ioPath = "io"
 	closerInterface = "Closer"
