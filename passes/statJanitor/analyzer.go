@@ -1,4 +1,4 @@
-package HttpBodyClose
+package statJanitor
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 )
 
 var Analyzer = &analysis.Analyzer{
-	Name: "HttpReponseBodyClose",
+	Name: "statJanitor",
 	Doc:  Doc,
 	Run:  run,
 	Requires: []*analysis.Analyzer{
@@ -19,7 +19,7 @@ var Analyzer = &analysis.Analyzer{
 }
 
 const (
-	Doc = "bodyclose checks whether HTTP response body was closed"
+	Doc = "statJanitor finds objects that didn't call Close()"
 
 	ioPath = "io"
 	closerInterface = "Closer"
